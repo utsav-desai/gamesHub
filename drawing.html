@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shared Drawing | MiniGames Hub</title>
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="module" src="js/drawing.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
+    </header>
+    <main class="drawing-shell">
+      <section class="panel">
+        <p class="eyebrow">Shared canvas</p>
+        <h1>Drawing</h1>
+        <p class="panel-copy">Works with Apple Pencil on iPad and pointer devices on laptops.</p>
+        <div class="drawing-tools">
+          <label class="field">Color <input id="brushColor" type="color" value="#0f8b8d"></label>
+          <label class="field">Brush <input id="brushSize" type="range" min="2" max="24" value="7"></label>
+          <button id="clearDrawingBtn" class="btn warning" type="button">Clear</button>
+        </div>
+        <div id="drawingStatus" class="status-box" role="status">Start drawing.</div>
+      </section>
+      <section class="game-panel drawing-panel">
+        <canvas id="drawingCanvas" class="drawing-canvas" aria-label="Shared drawing canvas"></canvas>
+      </section>
+    </main>
+  </body>
+</html>

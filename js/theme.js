@@ -47,6 +47,8 @@ function injectNavigation() {
     <a href="${prefix}profiles.html">Profiles</a>
     <a href="${prefix}reminders.html">Reminders</a>
     <a href="${prefix}together.html">Together</a>
+    <a href="${prefix}drawing.html">Drawing</a>
+    <a href="${prefix}gallery.html">Gallery</a>
   `;
   const toggle = header.querySelector("[data-theme-toggle]");
   header.insertBefore(nav, toggle || null);

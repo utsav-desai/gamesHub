@@ -180,7 +180,8 @@ button {
 .game-shell,
 .soon-shell,
 .utility-shell,
-.together-shell {
+.together-shell,
+.drawing-shell {
   width: min(1120px, calc(100% - 32px));
   margin: 0 auto;
   padding: 28px 0 56px;
@@ -201,6 +202,13 @@ button {
 
 .together-shell .panel {
   grid-column: 1 / -1;
+}
+
+.drawing-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
 }
 
 .hub-hero {
@@ -308,7 +316,7 @@ h1 {
 
 .home-tools {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 14px;
   margin-top: 18px;
 }
@@ -333,6 +341,30 @@ h1 {
 .tool-card small {
   color: var(--muted);
   line-height: 1.45;
+}
+
+.random-photo-panel {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: var(--surface);
+}
+
+.random-photo {
+  display: grid;
+  gap: 10px;
+}
+
+.random-photo img {
+  width: 100%;
+  max-height: 360px;
+  border-radius: var(--radius);
+  object-fit: cover;
 }
 
 .game-icon {
@@ -479,6 +511,14 @@ h1 {
   background: white;
   color: var(--ink);
   text-transform: none;
+}
+
+.field input[type="color"] {
+  padding: 4px;
+}
+
+.field input[type="range"] {
+  padding: 0;
 }
 
 .shared-note {
@@ -629,6 +669,71 @@ h1 {
   display: grid;
   gap: 5px;
   padding: 12px;
+}
+
+.drawing-tools {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.drawing-panel {
+  padding: 10px;
+}
+
+.drawing-canvas {
+  display: block;
+  width: 100%;
+  height: min(72vh, 720px);
+  min-height: 460px;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: #fffdf7;
+  touch-action: none;
+}
+
+:root[data-theme="dark"] .drawing-canvas {
+  background: #101412;
+}
+
+.gallery-folders {
+  display: grid;
+  gap: 22px;
+}
+
+.gallery-folder {
+  display: grid;
+  gap: 10px;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.media-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px;
+  background: var(--surface);
+}
+
+.media-card img,
+.media-card video {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  background: #111;
+  object-fit: cover;
+}
+
+.media-card small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
 }
 
 .room-strip {
@@ -1120,7 +1225,9 @@ h1 {
   .hub-hero,
   .game-shell,
   .utility-shell,
-  .together-shell {
+  .together-shell,
+  .drawing-shell,
+  .random-photo-panel {
     grid-template-columns: 1fr;
   }
 
@@ -1154,7 +1261,8 @@ h1 {
   .game-shell,
   .soon-shell,
   .utility-shell,
-  .together-shell {
+  .together-shell,
+  .drawing-shell {
     width: min(100% - 22px, 1120px);
   }
 
@@ -1189,6 +1297,11 @@ h1 {
 
   .inline-form {
     grid-template-columns: 1fr;
+  }
+
+  .drawing-canvas {
+    height: 62vh;
+    min-height: 360px;
   }
 
   .ttt-board {

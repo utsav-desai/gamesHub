@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gallery | MiniGames Hub</title>
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="module" src="js/gallery.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
+    </header>
+    <main class="utility-shell">
+      <section class="panel">
+        <p class="eyebrow">Memory folders</p>
+        <h1>Gallery</h1>
+        <p class="panel-copy">Upload photos or videos, grouped by folder names.</p>
+        <form id="galleryForm" class="form-stack">
+          <label class="field">Folder <input id="galleryFolder" type="text" maxlength="32" placeholder="Trips"></label>
+          <label class="field">Photos or videos <input id="galleryFile" type="file" accept="image/*,video/*" multiple required></label>
+          <button class="btn primary" type="submit">Upload</button>
+        </form>
+        <div id="galleryStatus" class="status-box" role="status">Choose files to upload.</div>
+      </section>
+      <section class="game-panel">
+        <h2 class="section-title">Folders</h2>
+        <div id="galleryFolders" class="gallery-folders"></div>
+      </section>
+    </main>
+  </body>
+</html>
