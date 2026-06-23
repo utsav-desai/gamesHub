@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A lightweight 2-player mini-games hub for live browser matches.">
+    <title>MiniGames Hub</title>
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="MiniGames Hub home">
+        <span class="brand-mark" aria-hidden="true">2P</span>
+        <span>MiniGames Hub</span>
+      </a>
+    </header>
+
+    <main class="hub-shell">
+      <section class="hub-hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Free static multiplayer</p>
+          <h1 id="page-title">Pick a quick 2-player game.</h1>
+          <p class="hero-copy">Create a room, share the code, and play live from any browser. Tic Tac Toe is ready now, with more games wired into the same room-friendly structure.</p>
+        </div>
+        <div class="hero-board" aria-hidden="true">
+          <span>X</span><span></span><span>O</span>
+          <span></span><span>X</span><span></span>
+          <span>O</span><span></span><span>X</span>
+        </div>
+      </section>
+
+      <section class="game-grid" aria-label="Games">
+        <a class="game-card is-ready" href="games/tic-tac-toe.html">
+          <span class="game-icon grid-icon" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </span>
+          <span class="game-info">
+            <strong>Tic Tac Toe</strong>
+            <small>Live 1v1 rooms</small>
+          </span>
+          <span class="pill">Play</span>
+        </a>
+
+        <a class="game-card" href="games/connect4.html">
+          <span class="game-icon connect-icon" aria-hidden="true"></span>
+          <span class="game-info">
+            <strong>Connect 4</strong>
+            <small>Coming soon</small>
+          </span>
+          <span class="pill muted">Soon</span>
+        </a>
+
+        <a class="game-card" href="games/bingo.html">
+          <span class="game-icon bingo-icon" aria-hidden="true">B</span>
+          <span class="game-info">
+            <strong>Bingo 1v1</strong>
+            <small>Coming soon</small>
+          </span>
+          <span class="pill muted">Soon</span>
+        </a>
+
+        <a class="game-card" href="games/quiz.html">
+          <span class="game-icon quiz-icon" aria-hidden="true">?</span>
+          <span class="game-info">
+            <strong>Quiz Duel</strong>
+            <small>Coming soon</small>
+          </span>
+          <span class="pill muted">Soon</span>
+        </a>
+
+        <a class="game-card" href="games/battleship.html">
+          <span class="game-icon ship-icon" aria-hidden="true"></span>
+          <span class="game-info">
+            <strong>Battleship</strong>
+            <small>Coming soon</small>
+          </span>
+          <span class="pill muted">Soon</span>
+        </a>
+      </section>
+    </main>
+  </body>
+</html>

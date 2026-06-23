@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tic Tac Toe | MiniGames Hub</title>
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script type="module" src="../js/tic-tac-toe.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../index.html" aria-label="MiniGames Hub home">
+        <span class="brand-mark" aria-hidden="true">2P</span>
+        <span>MiniGames Hub</span>
+      </a>
+    </header>
+
+    <main class="game-shell">
+      <section class="panel" aria-labelledby="game-title">
+        <p class="eyebrow">Live room</p>
+        <h1 id="game-title">Tic Tac Toe</h1>
+        <p class="panel-copy">Player 1 is X, Player 2 is O, and X starts.</p>
+
+        <div class="form-stack">
+          <label class="field">
+            Your name
+            <input id="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Player">
+          </label>
+
+          <button id="createRoomBtn" class="btn primary" type="button">Create Room</button>
+
+          <label class="field">
+            Room code
+            <input id="roomCodeInput" type="text" inputmode="latin" maxlength="6" placeholder="ABCDE" aria-label="Room code">
+          </label>
+
+          <button id="joinRoomBtn" class="btn" type="button">Join Room</button>
+        </div>
+
+        <div id="roomStrip" class="room-strip" aria-live="polite">
+          <div>
+            <span class="small-note">Room code</span>
+            <div id="currentRoomCode" class="room-code"></div>
+          </div>
+          <div class="room-actions">
+            <button id="copyRoomBtn" class="btn" type="button">Copy</button>
+            <button id="shareBtn" class="btn" type="button">Share</button>
+          </div>
+        </div>
+
+        <div id="statusMessage" class="status-box" role="status" aria-live="polite"></div>
+
+        <div class="button-row" style="margin-top: 14px;">
+          <button id="leaveRoomBtn" class="btn warning" type="button">Leave Room</button>
+        </div>
+      </section>
+
+      <section class="game-panel" aria-label="Tic Tac Toe board">
+        <div class="match-topbar">
+          <div id="playerOneBadge" class="player-badge">
+            <strong>Player 1</strong>
+            <span>X</span>
+          </div>
+          <div id="playerTwoBadge" class="player-badge">
+            <strong>Player 2</strong>
+            <span>O</span>
+          </div>
+        </div>
+
+        <div class="board-wrap">
+          <div class="ttt-board" role="grid" aria-label="Tic Tac Toe board">
+            <button class="cell" data-cell="0" type="button" disabled aria-label="Cell 1"></button>
+            <button class="cell" data-cell="1" type="button" disabled aria-label="Cell 2"></button>
+            <button class="cell" data-cell="2" type="button" disabled aria-label="Cell 3"></button>
+            <button class="cell" data-cell="3" type="button" disabled aria-label="Cell 4"></button>
+            <button class="cell" data-cell="4" type="button" disabled aria-label="Cell 5"></button>
+            <button class="cell" data-cell="5" type="button" disabled aria-label="Cell 6"></button>
+            <button class="cell" data-cell="6" type="button" disabled aria-label="Cell 7"></button>
+            <button class="cell" data-cell="7" type="button" disabled aria-label="Cell 8"></button>
+            <button class="cell" data-cell="8" type="button" disabled aria-label="Cell 9"></button>
+          </div>
+        </div>
+
+        <div id="postGameActions" class="post-game">
+          <button id="rematchBtn" class="btn primary" type="button">Rematch</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
