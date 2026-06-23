@@ -1653,6 +1653,28 @@ body {
   color: var(--ink);
 }
 
+.ttt-board {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  justify-items: stretch;
+  aspect-ratio: 1 / 1;
+  inline-size: min(100%, 560px);
+  max-inline-size: 560px;
+  overflow: hidden;
+}
+
+.ttt-board .cell {
+  inline-size: 100%;
+  block-size: 100%;
+  aspect-ratio: 1 / 1;
+  min-inline-size: 0;
+  min-block-size: 0;
+  padding: 0;
+  overflow: hidden;
+  contain: layout paint;
+}
+
 .connect-board {
   border: 0;
   border-radius: 24px;
