@@ -2,11 +2,11 @@ import { createRoomController } from "./game-room.js";
 
 const SIZE = 6;
 const SHIPS = [
-  { id: "carrier", name: "Carrier", length: 3, mark: "C" },
-  { id: "cruiser", name: "Cruiser", length: 3, mark: "R" },
-  { id: "destroyer", name: "Destroyer", length: 2, mark: "D" },
-  { id: "submarine", name: "Submarine", length: 2, mark: "S" },
-  { id: "patrol", name: "Patrol", length: 2, mark: "P" }
+  { id: "carrier", name: "Carrier", length: 3 },
+  { id: "cruiser", name: "Cruiser", length: 3 },
+  { id: "destroyer", name: "Destroyer", length: 2 },
+  { id: "submarine", name: "Submarine", length: 2 },
+  { id: "patrol", name: "Patrol", length: 2 }
 ];
 const FLEET_SIZE = SHIPS.reduce((total, ship) => total + ship.length, 0);
 
@@ -158,8 +158,8 @@ function renderOcean(target, fleet, shots, options) {
     const ship = occupied.get(index);
     const wasShot = shots.includes(index);
     if (!isTarget && ship) {
-      button.classList.add("ship", `ship-${ship.id}`);
-      button.textContent = ship.mark;
+      button.classList.add("ship", `ship-${ship.id}`, `ship-${ship.direction}`);
+      button.append(createShipPiece(ship));
     }
     if (!isTarget && isPlacement && !isReady && canPlaceShip(fleet, selectedShipId, index, selectedDirection)) {
       button.classList.add("placement-open");
@@ -169,7 +169,6 @@ function renderOcean(target, fleet, shots, options) {
     }
     if (wasShot) {
       button.classList.add(ship ? "hit" : "miss");
-      button.textContent = ship ? "X" : "";
     }
     button.disabled = getCellDisabledState({ isTarget, isPlacement, isReady, wasShot });
     if (isTarget) button.addEventListener("click", () => fireAt(index));
@@ -321,11 +320,29 @@ function getOccupiedMap(fleet, excludedShipId = "") {
   const occupied = new Map();
   for (const ship of Object.values(normalizeFleet(fleet))) {
     if (ship.id === excludedShipId) continue;
-    for (const position of ship.positions || []) {
-      occupied.set(position, SHIPS.find((item) => item.id === ship.id) || ship);
+    const definition = SHIPS.find((item) => item.id === ship.id) || ship;
+    for (const [segment, position] of (ship.positions || []).entries()) {
+      occupied.set(position, {
+        ...definition,
+        direction: ship.direction,
+        segmentType: getSegmentType(segment, definition.length)
+      });
     }
   }
   return occupied;
+}
+
+function createShipPiece(ship) {
+  const piece = document.createElement("span");
+  piece.className = `ship-piece ship-${ship.direction} ship-segment-${ship.segmentType}`;
+  piece.setAttribute("aria-hidden", "true");
+  return piece;
+}
+
+function getSegmentType(segment, length) {
+  if (segment === 0) return "stern";
+  if (segment === length - 1) return "bow";
+  return "mid";
 }
 
 function getFleetPositions(fleet) {

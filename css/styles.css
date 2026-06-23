@@ -1099,6 +1099,7 @@ h1 {
 }
 
 .ocean-cell {
+  position: relative;
   display: grid;
   aspect-ratio: 1;
   min-width: 0;
@@ -1108,6 +1109,7 @@ h1 {
   background: #e7f7fb;
   color: var(--ink);
   font-weight: 900;
+  overflow: hidden;
 }
 
 .ocean-cell.ship {
@@ -1115,6 +1117,54 @@ h1 {
   border-color: #26383e;
   color: white;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.22);
+}
+
+.ship-piece {
+  position: relative;
+  display: block;
+  width: 80%;
+  height: 46%;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.03));
+  box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.ship-piece::before,
+.ship-piece::after {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.82);
+  content: "";
+}
+
+.ship-piece::before {
+  inset: 28% 34%;
+  border-radius: 999px;
+}
+
+.ship-piece::after {
+  inset: 16% 56% 16% 22%;
+  border-radius: 2px;
+}
+
+.ship-vertical .ship-piece {
+  transform: rotate(90deg);
+}
+
+.ship-segment-stern {
+  border-radius: 999px 5px 5px 999px;
+}
+
+.ship-segment-mid {
+  border-radius: 5px;
+}
+
+.ship-segment-bow {
+  clip-path: polygon(0 8%, 68% 8%, 100% 50%, 68% 92%, 0 92%);
+}
+
+.ship-segment-bow::after {
+  display: none;
 }
 
 .ocean-cell.ship-carrier {
@@ -1151,6 +1201,29 @@ h1 {
   background: var(--coral);
   border-color: var(--danger);
   color: white;
+}
+
+.ocean-cell.hit::before,
+.ocean-cell.hit::after {
+  position: absolute;
+  width: 62%;
+  height: 4px;
+  border-radius: 999px;
+  background: white;
+  content: "";
+  z-index: 2;
+}
+
+.ocean-cell.hit::before {
+  transform: rotate(45deg);
+}
+
+.ocean-cell.hit::after {
+  transform: rotate(-45deg);
+}
+
+.ocean-cell.hit .ship-piece {
+  opacity: 0.34;
 }
 
 .ocean-cell.miss {
