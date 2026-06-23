@@ -1083,6 +1083,7 @@ h1 {
 }
 
 .ocean-grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 6px;
@@ -1112,82 +1113,105 @@ h1 {
   overflow: hidden;
 }
 
-.ocean-cell.ship {
-  background: #52656b;
-  border-color: #26383e;
-  color: white;
+.ship-token,
+.ship-drag-ghost {
+  --ship-color: #52656b;
+  --ship-edge: #26383e;
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--ship-edge) 70%, white);
+  background:
+    radial-gradient(circle at 28% 50%, rgba(255, 255, 255, 0.9) 0 6px, transparent 7px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.03)),
+    var(--ship-color);
+  box-shadow: inset 0 -8px 0 rgba(0, 0, 0, 0.14), inset 0 0 0 3px rgba(255, 255, 255, 0.16), 0 3px 8px rgba(20, 31, 33, 0.18);
+}
+
+.ship-token {
+  position: absolute;
+  inset: 10px;
+  z-index: 3;
+  min-width: 0;
+  padding: 0;
+  border-radius: 999px 16px 16px 999px;
+  clip-path: polygon(0 9%, 82% 9%, 100% 50%, 82% 91%, 0 91%);
+  appearance: none;
   cursor: grab;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.22);
   touch-action: none;
 }
 
-.ship-piece {
-  position: relative;
-  display: block;
-  width: 80%;
-  height: 46%;
-  min-width: 0;
-  border: 1px solid rgba(255, 255, 255, 0.68);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.03));
-  box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.2);
+.ship-token::before,
+.ship-token::after,
+.ship-drag-ghost::before,
+.ship-drag-ghost::after {
+  position: absolute;
+  content: "";
   pointer-events: none;
 }
 
-.ship-piece::before,
-.ship-piece::after {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.82);
-  content: "";
+.ship-token::before,
+.ship-drag-ghost::before {
+  inset: 31% 34% 31% 18%;
+  border: 2px solid rgba(255, 255, 255, 0.68);
+  border-radius: 7px;
 }
 
-.ship-piece::before {
-  inset: 28% 34%;
-  border-radius: 999px;
+.ship-token::after,
+.ship-drag-ghost::after {
+  left: 14%;
+  top: 50%;
+  width: 64%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.72);
+  transform: translateY(-50%);
 }
 
-.ship-piece::after {
-  inset: 16% 56% 16% 22%;
-  border-radius: 2px;
+.ship-token.ship-vertical {
+  border-radius: 999px 999px 16px 16px;
+  clip-path: polygon(9% 0, 91% 0, 91% 82%, 50% 100%, 9% 82%);
 }
 
-.ship-vertical .ship-piece {
-  transform: rotate(90deg);
+.ship-token.ship-vertical::before,
+.ship-drag-ghost.ship-vertical::before {
+  inset: 18% 31% 34% 31%;
 }
 
-.ship-segment-stern {
-  border-radius: 999px 5px 5px 999px;
+.ship-token.ship-vertical::after,
+.ship-drag-ghost.ship-vertical::after {
+  left: 50%;
+  top: 14%;
+  width: 2px;
+  height: 64%;
+  transform: translateX(-50%);
 }
 
-.ship-segment-mid {
-  border-radius: 5px;
+.ship-token.ship-carrier,
+.ship-drag-ghost.ship-carrier {
+  --ship-color: #52656b;
+  --ship-edge: #26383e;
 }
 
-.ship-segment-bow {
-  clip-path: polygon(0 8%, 68% 8%, 100% 50%, 68% 92%, 0 92%);
+.ship-token.ship-cruiser,
+.ship-drag-ghost.ship-cruiser {
+  --ship-color: #6b5e7c;
+  --ship-edge: #332d3f;
 }
 
-.ship-segment-bow::after {
-  display: none;
+.ship-token.ship-destroyer,
+.ship-drag-ghost.ship-destroyer {
+  --ship-color: #7b7453;
+  --ship-edge: #39341d;
 }
 
-.ocean-cell.ship-carrier {
-  background: #52656b;
+.ship-token.ship-submarine,
+.ship-drag-ghost.ship-submarine {
+  --ship-color: #4d7372;
+  --ship-edge: #1e3c3b;
 }
 
-.ocean-cell.ship-cruiser {
-  background: #6b5e7c;
-}
-
-.ocean-cell.ship-destroyer {
-  background: #7b7453;
-}
-
-.ocean-cell.ship-submarine {
-  background: #4d7372;
-}
-
-.ocean-cell.ship-patrol {
-  background: #7d5f58;
+.ship-token.ship-patrol,
+.ship-drag-ghost.ship-patrol {
+  --ship-color: #7d5f58;
+  --ship-edge: #3e2924;
 }
 
 .ocean-cell.placement-open:not(.ship) {
@@ -1195,13 +1219,18 @@ h1 {
   background: #d7f5ef;
 }
 
-.ocean-cell.selected-ship {
+.ship-token.selected-ship {
   outline: 3px solid var(--sun);
-  outline-offset: -4px;
+  outline-offset: 3px;
 }
 
-.ocean-cell.dragging-ship {
+.ship-token.dragging-ship {
   opacity: 0.38;
+}
+
+.ship-token:disabled {
+  cursor: default;
+  opacity: 1;
 }
 
 .ocean-cell.drag-preview-valid {
@@ -1221,32 +1250,19 @@ h1 {
   left: 0;
   top: 0;
   z-index: 20;
-  display: flex;
-  width: min(168px, 32vw);
+  width: min(calc(var(--ship-length) * 58px), 34vw);
   height: 48px;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  border-radius: 12px;
-  background: rgba(40, 57, 62, 0.74);
+  border-radius: 999px 16px 16px 999px;
+  clip-path: polygon(0 9%, 82% 9%, 100% 50%, 82% 91%, 0 91%);
   box-shadow: 0 18px 38px rgba(20, 31, 33, 0.28);
   pointer-events: none;
 }
 
 .ship-drag-ghost.ship-vertical {
   width: 48px;
-  height: min(168px, 32vw);
-  flex-direction: column;
-}
-
-.ship-drag-ghost .ship-piece {
-  width: 46px;
-  height: 30px;
-  transform: none;
-}
-
-.ship-drag-ghost.ship-vertical .ship-piece {
-  transform: rotate(90deg);
+  height: min(calc(var(--ship-length) * 58px), 34vw);
+  border-radius: 999px 999px 16px 16px;
+  clip-path: polygon(9% 0, 91% 0, 91% 82%, 50% 100%, 9% 82%);
 }
 
 .is-dragging-ship {
@@ -1255,6 +1271,7 @@ h1 {
 }
 
 .ocean-cell.hit {
+  z-index: 4;
   background: var(--coral);
   border-color: var(--danger);
   color: white;
@@ -1279,10 +1296,6 @@ h1 {
   transform: rotate(-45deg);
 }
 
-.ocean-cell.hit .ship-piece {
-  opacity: 0.34;
-}
-
 .ocean-cell.miss {
   background: #d2e9f2;
 }
@@ -1290,31 +1303,6 @@ h1 {
 :root[data-theme="dark"] .ocean-cell {
   background: #16313a;
   border-color: #33535c;
-}
-
-:root[data-theme="dark"] .ocean-cell.ship {
-  border-color: #9bb3b8;
-  color: white;
-}
-
-:root[data-theme="dark"] .ocean-cell.ship-carrier {
-  background: #52656b;
-}
-
-:root[data-theme="dark"] .ocean-cell.ship-cruiser {
-  background: #6b5e7c;
-}
-
-:root[data-theme="dark"] .ocean-cell.ship-destroyer {
-  background: #7b7453;
-}
-
-:root[data-theme="dark"] .ocean-cell.ship-submarine {
-  background: #4d7372;
-}
-
-:root[data-theme="dark"] .ocean-cell.ship-patrol {
-  background: #7d5f58;
 }
 
 :root[data-theme="dark"] .ocean-cell.placement-open:not(.ship) {

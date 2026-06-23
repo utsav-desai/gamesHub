@@ -164,19 +164,8 @@ function renderOcean(target, fleet, shots, options) {
     button.dataset.index = String(index);
     const ship = occupied.get(index);
     const wasShot = shots.includes(index);
-    if (!isTarget && ship) {
-      button.classList.add("ship", `ship-${ship.id}`, `ship-${ship.direction}`);
-      button.dataset.shipId = ship.id;
-      button.append(createShipPiece(ship));
-    }
     if (!isTarget && isPlacement && !isReady && !dragState && canPlaceShip(fleet, selectedShipId, index, selectedDirection)) {
       button.classList.add("placement-open");
-    }
-    if (!isTarget && isPlacement && !isReady && fleet[selectedShipId]?.positions?.includes(index)) {
-      button.classList.add("selected-ship");
-    }
-    if (!isTarget && dragState?.shipId === ship?.id) {
-      button.classList.add("dragging-ship");
     }
     if (!isTarget && options.preview?.positions?.includes(index)) {
       button.classList.add(options.preview.valid ? "drag-preview-valid" : "drag-preview-invalid");
@@ -188,32 +177,32 @@ function renderOcean(target, fleet, shots, options) {
     if (isTarget) button.addEventListener("click", () => fireAt(index));
     target.append(button);
   }
+  if (!isTarget) renderShipTokens(target, fleet, { isPlacement, isReady });
 }
 
 function startShipDrag(event) {
   const room = controller.room;
   if (!room || room.phase === "battle" || room.fleetReady?.[controller.playerKey]) return;
 
-  const cell = event.target.closest(".ocean-cell.ship");
-  if (!cell || !ownGrid.contains(cell)) return;
+  const token = event.target.closest(".ship-token");
+  if (!token || !ownGrid.contains(token)) return;
 
-  const index = Number(cell.dataset.index);
+  const shipId = token.dataset.shipId;
   const fleet = normalizeFleet(room.fleets?.[controller.playerKey]);
-  const occupied = getOccupiedMap(fleet);
-  const ship = occupied.get(index);
+  const ship = fleet[shipId];
   if (!ship) return;
 
   event.preventDefault();
-  selectedShipId = ship.id;
-  selectedDirection = fleet[ship.id].direction;
-  shipPicker.value = ship.id;
+  selectedShipId = shipId;
+  selectedDirection = ship.direction;
+  shipPicker.value = shipId;
 
-  const originPositions = fleet[ship.id].positions || [];
+  const originPositions = ship.positions || [];
   dragState = {
     pointerId: event.pointerId,
-    shipId: ship.id,
-    direction: fleet[ship.id].direction,
-    offset: Math.max(0, originPositions.indexOf(index)),
+    shipId,
+    direction: ship.direction,
+    offset: getDraggedSegmentOffset(token, event, ship),
     startX: event.clientX,
     startY: event.clientY,
     currentX: event.clientX,
@@ -221,7 +210,7 @@ function startShipDrag(event) {
     previewStart: originPositions[0],
     hasMoved: false,
     valid: true,
-    ghost: createDragGhost(fleet[ship.id])
+    ghost: createDragGhost(ship)
   };
 
   ownGrid.setPointerCapture?.(event.pointerId);
@@ -379,22 +368,50 @@ function getDragPreview() {
 }
 
 function getCellFromPoint(clientX, clientY) {
-  const element = document.elementFromPoint(clientX, clientY);
-  const cell = element?.closest?.(".ocean-cell");
+  const element = document.elementsFromPoint(clientX, clientY)
+    .find((item) => item.closest?.(".ocean-cell"));
+  const cell = element?.closest(".ocean-cell");
   return cell && ownGrid.contains(cell) ? cell : null;
+}
+
+function renderShipTokens(target, fleet, options) {
+  for (const ship of Object.values(normalizeFleet(fleet))) {
+    if (!ship.positions?.length) continue;
+    const token = createShipToken(ship, options);
+    target.append(token);
+  }
+}
+
+function createShipToken(ship, options) {
+  const start = ship.positions[0];
+  const token = document.createElement("button");
+  token.className = `ship-token ship-${ship.id} ship-${ship.direction}`;
+  token.type = "button";
+  token.dataset.shipId = ship.id;
+  token.dataset.index = String(start);
+  token.style.gridColumn = `${start % SIZE + 1} / span ${ship.direction === "horizontal" ? ship.positions.length : 1}`;
+  token.style.gridRow = `${Math.floor(start / SIZE) + 1} / span ${ship.direction === "vertical" ? ship.positions.length : 1}`;
+  token.style.setProperty("--ship-length", String(ship.positions.length));
+  token.setAttribute("aria-label", `${getShipDefinition(ship.id).name}, ${ship.direction}`);
+  token.disabled = !options.isPlacement || options.isReady;
+  token.classList.toggle("selected-ship", ship.id === selectedShipId);
+  token.classList.toggle("dragging-ship", dragState?.shipId === ship.id);
+  return token;
+}
+
+function getDraggedSegmentOffset(token, event, ship) {
+  const rect = token.getBoundingClientRect();
+  const length = Math.max(1, ship.positions.length);
+  const ratio = ship.direction === "horizontal"
+    ? (event.clientX - rect.left) / rect.width
+    : (event.clientY - rect.top) / rect.height;
+  return Math.max(0, Math.min(length - 1, Math.floor(ratio * length)));
 }
 
 function createDragGhost(ship) {
   const ghost = document.createElement("div");
   ghost.className = `ship-drag-ghost ship-${ship.id} ship-${ship.direction}`;
-  for (const [segment] of ship.positions.entries()) {
-    const piece = createShipPiece({
-      ...getShipDefinition(ship.id),
-      direction: ship.direction,
-      segmentType: getSegmentType(segment, ship.positions.length)
-    });
-    ghost.append(piece);
-  }
+  ghost.style.setProperty("--ship-length", String(ship.positions.length));
   document.body.append(ghost);
   return ghost;
 }
@@ -505,11 +522,10 @@ function getOccupiedMap(fleet, excludedShipId = "") {
   for (const ship of Object.values(normalizeFleet(fleet))) {
     if (ship.id === excludedShipId) continue;
     const definition = getShipDefinition(ship.id) || ship;
-    for (const [segment, position] of (ship.positions || []).entries()) {
+    for (const position of ship.positions || []) {
       occupied.set(position, {
         ...definition,
-        direction: ship.direction,
-        segmentType: getSegmentType(segment, definition.length)
+        direction: ship.direction
       });
     }
   }
@@ -518,19 +534,6 @@ function getOccupiedMap(fleet, excludedShipId = "") {
 
 function getShipDefinition(shipId) {
   return SHIPS.find((ship) => ship.id === shipId);
-}
-
-function createShipPiece(ship) {
-  const piece = document.createElement("span");
-  piece.className = `ship-piece ship-${ship.direction} ship-segment-${ship.segmentType}`;
-  piece.setAttribute("aria-hidden", "true");
-  return piece;
-}
-
-function getSegmentType(segment, length) {
-  if (segment === 0) return "stern";
-  if (segment === length - 1) return "bow";
-  return "mid";
 }
 
 function getFleetPositions(fleet) {
