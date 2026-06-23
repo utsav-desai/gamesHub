@@ -4,18 +4,42 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quiz Duel | MiniGames Hub</title>
+    <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="stylesheet" href="../css/styles.css">
+    <script type="module" src="../js/quiz.js"></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
     </header>
-    <main class="soon-shell">
-      <section class="soon-panel">
-        <p class="eyebrow">Coming soon</p>
-        <h1>Quiz Duel</h1>
-        <p class="panel-copy">Question packs, scoring, and timers can plug into the same Firebase room pattern.</p>
-        <a class="btn primary" href="tic-tac-toe.html">Play Tic Tac Toe</a>
+    <main class="game-shell">
+      <section class="panel" aria-labelledby="game-title">
+        <p class="eyebrow">Live room</p>
+        <h1 id="game-title">Quiz Duel</h1>
+        <p class="panel-copy">Both players answer each question. Highest score after five questions wins.</p>
+        <div class="form-stack">
+          <label class="field">Your name <input id="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Player"></label>
+          <button id="createRoomBtn" class="btn primary" type="button">Create Room</button>
+          <label class="field">Room code <input id="roomCodeInput" type="text" inputmode="latin" maxlength="6" placeholder="ABCDE" aria-label="Room code"></label>
+          <button id="joinRoomBtn" class="btn" type="button">Join Room</button>
+        </div>
+        <div id="roomStrip" class="room-strip" aria-live="polite">
+          <div><span class="small-note">Room code</span><div id="currentRoomCode" class="room-code"></div></div>
+          <div class="room-actions"><button id="copyRoomBtn" class="btn" type="button">Copy</button><button id="shareBtn" class="btn" type="button">Share</button></div>
+        </div>
+        <div id="statusMessage" class="status-box" role="status" aria-live="polite"></div>
+        <p id="quizScore" class="small-note">Score: you 0 / opponent 0</p>
+        <div class="button-row" style="margin-top: 14px;"><button id="leaveRoomBtn" class="btn warning" type="button">Leave Room</button></div>
+      </section>
+      <section class="game-panel" aria-label="Quiz duel">
+        <div class="match-topbar">
+          <div id="playerOneBadge" class="player-badge"><strong>Player 1</strong><span>Score</span></div>
+          <div id="playerTwoBadge" class="player-badge"><strong>Player 2</strong><span>Score</span></div>
+        </div>
+        <p id="quizProgress" class="eyebrow">Question 0 of 5</p>
+        <h2 id="questionText" class="quiz-question">Create or join a room to begin.</h2>
+        <div id="choices" class="choices"></div>
+        <div id="postGameActions" class="post-game"><button id="rematchBtn" class="btn primary" type="button">Rematch</button></div>
       </section>
     </main>
   </body>

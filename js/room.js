@@ -66,7 +66,7 @@ export async function createRoom(gameType, name, initialState) {
   throw new Error("Could not create a unique room. Please try again.");
 }
 
-export async function joinRoom(roomCodeInput, name) {
+export async function joinRoom(roomCodeInput, name, expectedGameType = "") {
   ensureFirebaseReady();
   const roomCode = normalizeRoomCode(roomCodeInput);
 
@@ -78,6 +78,9 @@ export async function joinRoom(roomCodeInput, name) {
   const existingSnapshot = await get(targetRef);
   if (!existingSnapshot.exists()) {
     throw new Error("Room not found.");
+  }
+  if (expectedGameType && existingSnapshot.val()?.gameType !== expectedGameType) {
+    throw new Error("That room belongs to a different game.");
   }
 
   let joinedAs = null;

@@ -2,7 +2,7 @@
 
 A free, static, lightweight 2-player game hub for your own domain. It uses plain HTML, CSS, vanilla JavaScript, Firebase Realtime Database for live multiplayer state, and Cloudflare Pages for hosting.
 
-Tic Tac Toe is fully playable in live 1v1 rooms. Connect 4, Bingo 1v1, Quiz Duel, and Battleship are placeholder pages that share the same visual system and navigation.
+Tic Tac Toe, Connect 4, Bingo 1v1, Quiz Duel, and Battleship are playable in live 1v1 rooms.
 
 ## Folder Structure
 
@@ -27,9 +27,9 @@ Tic Tac Toe is fully playable in live 1v1 rooms. Connect 4, Bingo 1v1, Quiz Duel
 
 ## How The Room System Works
 
-Each game room is stored under `/rooms/{roomCode}` in Firebase Realtime Database. The creator becomes `player1` with symbol `X`; the joining player becomes `player2` with symbol `O`. The shared room object stores the game type, players, board, turn, winner, and rematch votes.
+Each game room is stored under `/rooms/{roomCode}` in Firebase Realtime Database. The creator becomes `player1`; the joining player becomes `player2`. The shared room object stores the game type, players, game state, turn, winner, and rematch votes.
 
-The browser stores a unique `playerId` in `localStorage`, so refreshing the page can reconnect the same player to the same room. The room helper in `js/room.js` handles room codes, create/join logic, two-player limits, live subscriptions, and basic presence. The Tic Tac Toe file only handles board rendering, move validation, winner detection, and rematch behavior.
+The browser stores a unique `playerId` in `localStorage`, so refreshing the page can reconnect the same player to the same room. The room helper in `js/room.js` handles room codes, create/join logic, two-player limits, live subscriptions, and basic presence. `js/game-room.js` handles the common room UI for the newer games, while each game file handles its own rules.
 
 ## Firebase Setup
 
@@ -88,7 +88,7 @@ These rules still do not replace real authentication, but they limit the databas
         ".write": "$roomCode.matches(/^[A-Z0-9]{4,6}$/)",
         ".validate": "newData.hasChildren(['gameType', 'status', 'players'])",
         "gameType": {
-          ".validate": "newData.val() === 'tic-tac-toe'"
+          ".validate": "newData.val() === 'tic-tac-toe' || newData.val() === 'connect4' || newData.val() === 'bingo' || newData.val() === 'quiz' || newData.val() === 'battleship'"
         },
         "status": {
           ".validate": "newData.val() === 'waiting' || newData.val() === 'playing' || newData.val() === 'finished'"
@@ -141,6 +141,19 @@ Open two browser windows to test a live room.
 
 Cloudflare will give you a free `*.pages.dev` URL after deployment.
 
+## Update The Live Site
+
+After editing the code locally, push your changes to GitHub. Cloudflare Pages will automatically deploy the latest commit from your production branch.
+
+```bash
+git status
+git add .
+git commit -m "Add more multiplayer games"
+git push
+```
+
+Then open your Cloudflare Pages project and watch the new deployment finish. Your `pages.dev` URL and custom domain will update when the deployment succeeds.
+
 ## Connect A Custom Domain
 
 1. Open your Cloudflare Pages project.
@@ -154,7 +167,7 @@ Cloudflare will give you a free `*.pages.dev` URL after deployment.
 
 1. Create a new file in `games/`.
 2. Reuse the shared styles from `css/styles.css`.
-3. Import room helpers from `js/room.js`.
+3. Use `js/game-room.js` for common room controls, or import lower-level room helpers from `js/room.js`.
 4. Store game-specific state inside the room object, like `board`, `scores`, `questions`, or `ships`.
 5. Keep game rules in a separate file such as `js/connect4.js`.
 

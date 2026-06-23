@@ -4,18 +4,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Connect 4 | MiniGames Hub</title>
+    <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="stylesheet" href="../css/styles.css">
+    <script type="module" src="../js/connect4.js"></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
     </header>
-    <main class="soon-shell">
-      <section class="soon-panel">
-        <p class="eyebrow">Coming soon</p>
-        <h1>Connect 4</h1>
-        <p class="panel-copy">This page is ready for the shared room system when the game logic is added.</p>
-        <a class="btn primary" href="tic-tac-toe.html">Play Tic Tac Toe</a>
+    <main class="game-shell">
+      <section class="panel" aria-labelledby="game-title">
+        <p class="eyebrow">Live room</p>
+        <h1 id="game-title">Connect 4</h1>
+        <p class="panel-copy">Drop discs into columns. Four in a row wins.</p>
+        <div class="form-stack">
+          <label class="field">Your name <input id="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Player"></label>
+          <button id="createRoomBtn" class="btn primary" type="button">Create Room</button>
+          <label class="field">Room code <input id="roomCodeInput" type="text" inputmode="latin" maxlength="6" placeholder="ABCDE" aria-label="Room code"></label>
+          <button id="joinRoomBtn" class="btn" type="button">Join Room</button>
+        </div>
+        <div id="roomStrip" class="room-strip" aria-live="polite">
+          <div><span class="small-note">Room code</span><div id="currentRoomCode" class="room-code"></div></div>
+          <div class="room-actions"><button id="copyRoomBtn" class="btn" type="button">Copy</button><button id="shareBtn" class="btn" type="button">Share</button></div>
+        </div>
+        <div id="statusMessage" class="status-box" role="status" aria-live="polite"></div>
+        <div class="button-row" style="margin-top: 14px;"><button id="leaveRoomBtn" class="btn warning" type="button">Leave Room</button></div>
+      </section>
+      <section class="game-panel" aria-label="Connect 4 board">
+        <div class="match-topbar">
+          <div id="playerOneBadge" class="player-badge"><strong>Player 1</strong><span>Red</span></div>
+          <div id="playerTwoBadge" class="player-badge"><strong>Player 2</strong><span>Yellow</span></div>
+        </div>
+        <div class="board-wrap"><div id="connectBoard" class="connect-board" aria-label="Connect 4 grid"></div></div>
+        <div id="postGameActions" class="post-game"><button id="rematchBtn" class="btn primary" type="button">Rematch</button></div>
       </section>
     </main>
   </body>

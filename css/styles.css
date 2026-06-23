@@ -468,6 +468,170 @@ h1 {
   border-color: var(--sun);
 }
 
+.connect-board {
+  display: grid;
+  width: min(100%, 620px);
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  border: 3px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 10px;
+  background: var(--accent);
+}
+
+.c4-cell {
+  display: grid;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: white;
+  transition: transform 120ms ease, background 120ms ease;
+}
+
+.c4-cell:not(:disabled):hover,
+.c4-cell:not(:disabled):focus-visible {
+  transform: translateY(-3px);
+  outline: none;
+}
+
+.c4-cell.red {
+  background: var(--coral);
+}
+
+.c4-cell.yellow {
+  background: var(--sun);
+}
+
+.c4-cell.win {
+  box-shadow: inset 0 0 0 5px white;
+}
+
+.section-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.bingo-layout,
+.ocean-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.bingo-board,
+.call-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+}
+
+.bingo-board {
+  margin-bottom: 18px;
+}
+
+.bingo-cell,
+.number-chip {
+  display: grid;
+  aspect-ratio: 1;
+  min-width: 0;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+  color: var(--ink);
+  font-weight: 850;
+}
+
+.bingo-board.compact .bingo-cell {
+  background: #f3f5f0;
+}
+
+.bingo-cell.marked,
+.number-chip.called {
+  background: var(--green);
+  color: white;
+}
+
+.number-chip:not(:disabled):hover,
+.number-chip:not(:disabled):focus-visible {
+  border-color: var(--accent);
+  background: #eef9f7;
+  outline: none;
+}
+
+.quiz-question {
+  min-height: 88px;
+  margin: 0 0 18px;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.12;
+}
+
+.choices {
+  display: grid;
+  gap: 10px;
+}
+
+.choice-btn {
+  min-height: 58px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: white;
+  color: var(--ink);
+  font-weight: 800;
+  text-align: left;
+}
+
+.choice-btn:not(:disabled):hover,
+.choice-btn:not(:disabled):focus-visible,
+.choice-btn.selected {
+  border-color: var(--accent);
+  background: #eef9f7;
+  outline: none;
+}
+
+.ocean-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.ocean-cell {
+  display: grid;
+  aspect-ratio: 1;
+  min-width: 0;
+  place-items: center;
+  border: 1px solid #b8d4de;
+  border-radius: 6px;
+  background: #e7f7fb;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.ocean-cell.ship {
+  background: #9aa6a8;
+  border-color: var(--ink);
+}
+
+.ocean-cell.hit {
+  background: var(--coral);
+  border-color: var(--danger);
+  color: white;
+}
+
+.ocean-cell.miss {
+  background: #d2e9f2;
+}
+
+.target .ocean-cell:not(:disabled):hover,
+.target .ocean-cell:not(:disabled):focus-visible {
+  border-color: var(--accent);
+  background: #cceff4;
+  outline: none;
+}
+
 .post-game {
   display: none;
   gap: 10px;
@@ -543,5 +707,21 @@ h1 {
 
   .ttt-board {
     gap: 7px;
+  }
+
+  .connect-board {
+    gap: 5px;
+    padding: 7px;
+  }
+
+  .bingo-layout,
+  .ocean-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .bingo-cell,
+  .number-chip,
+  .ocean-cell {
+    font-size: 0.9rem;
   }
 }

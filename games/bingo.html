@@ -4,18 +4,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bingo 1v1 | MiniGames Hub</title>
+    <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="stylesheet" href="../css/styles.css">
+    <script type="module" src="../js/bingo.js"></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
     </header>
-    <main class="soon-shell">
-      <section class="soon-panel">
-        <p class="eyebrow">Coming soon</p>
-        <h1>Bingo 1v1</h1>
-        <p class="panel-copy">The placeholder keeps navigation live while future game state can reuse rooms.</p>
-        <a class="btn primary" href="tic-tac-toe.html">Play Tic Tac Toe</a>
+    <main class="game-shell">
+      <section class="panel" aria-labelledby="game-title">
+        <p class="eyebrow">Live room</p>
+        <h1 id="game-title">Bingo 1v1</h1>
+        <p class="panel-copy">Take turns calling numbers. First to complete five lines wins.</p>
+        <div class="form-stack">
+          <label class="field">Your name <input id="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Player"></label>
+          <button id="createRoomBtn" class="btn primary" type="button">Create Room</button>
+          <label class="field">Room code <input id="roomCodeInput" type="text" inputmode="latin" maxlength="6" placeholder="ABCDE" aria-label="Room code"></label>
+          <button id="joinRoomBtn" class="btn" type="button">Join Room</button>
+        </div>
+        <div id="roomStrip" class="room-strip" aria-live="polite">
+          <div><span class="small-note">Room code</span><div id="currentRoomCode" class="room-code"></div></div>
+          <div class="room-actions"><button id="copyRoomBtn" class="btn" type="button">Copy</button><button id="shareBtn" class="btn" type="button">Share</button></div>
+        </div>
+        <div id="statusMessage" class="status-box" role="status" aria-live="polite"></div>
+        <p id="lineScore" class="small-note">Lines: you 0 / opponent 0</p>
+        <div class="button-row" style="margin-top: 14px;"><button id="leaveRoomBtn" class="btn warning" type="button">Leave Room</button></div>
+      </section>
+      <section class="game-panel" aria-label="Bingo boards">
+        <div class="match-topbar">
+          <div id="playerOneBadge" class="player-badge"><strong>Player 1</strong><span>Caller</span></div>
+          <div id="playerTwoBadge" class="player-badge"><strong>Player 2</strong><span>Caller</span></div>
+        </div>
+        <div class="bingo-layout">
+          <div><h2 class="section-title">Your card</h2><div id="myBingoBoard" class="bingo-board"></div></div>
+          <div><h2 class="section-title">Opponent marks</h2><div id="opponentBingoBoard" class="bingo-board compact"></div></div>
+        </div>
+        <h2 class="section-title">Call a number</h2>
+        <div id="callGrid" class="call-grid"></div>
+        <div id="postGameActions" class="post-game"><button id="rematchBtn" class="btn primary" type="button">Rematch</button></div>
       </section>
     </main>
   </body>
