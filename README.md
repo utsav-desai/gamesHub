@@ -30,6 +30,8 @@ Tic Tac Toe, Connect 4, Bingo 1v1, Quiz Duel, Battleship, and Name Place Animal 
 
 Each game room is stored under `/rooms/{roomCode}` in Firebase Realtime Database. The creator becomes `player1`; the joining player becomes `player2`. The shared room object stores the game type, players, game state, turn, winner, and rematch votes.
 
+Shared couple features live under `/couple`: profiles, reminders, date ideas, mood check-ins, and a shared note.
+
 The browser stores a unique `playerId` in `localStorage`, so refreshing the page can reconnect the same player to the same room. The room helper in `js/room.js` handles room codes, create/join logic, two-player limits, live subscriptions, and basic presence. `js/game-room.js` handles the common room UI for the newer games, while each game file handles its own rules.
 
 ## Firebase Setup
@@ -71,6 +73,10 @@ These are simple development rules for quick testing. They allow anyone to read 
         ".read": true,
         ".write": true
       }
+    },
+    "couple": {
+      ".read": true,
+      ".write": true
     }
   }
 }
@@ -100,6 +106,10 @@ These rules still do not replace real authentication, but they limit the databas
           }
         }
       }
+    },
+    "couple": {
+      ".read": true,
+      ".write": true
     }
   }
 }

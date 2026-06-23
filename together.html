@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Together | MiniGames Hub</title>
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="module" src="js/together.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
+    </header>
+    <main class="together-shell">
+      <section class="panel">
+        <p class="eyebrow">For both of you</p>
+        <h1>Together</h1>
+        <p class="panel-copy">A small shared space for date ideas, mood check-ins, and one living note.</p>
+        <div id="togetherStatus" class="status-box" role="status">Pick a little thing to update.</div>
+      </section>
+
+      <section class="game-panel">
+        <h2 class="section-title">Date idea jar</h2>
+        <form id="ideaForm" class="inline-form">
+          <input id="ideaText" type="text" maxlength="120" placeholder="Sunset walk and chai" required>
+          <button class="btn primary" type="submit">Add</button>
+        </form>
+        <ul id="ideaList" class="idea-list"></ul>
+      </section>
+
+      <section class="game-panel">
+        <h2 class="section-title">Mood check-in</h2>
+        <form id="moodForm" class="form-stack">
+          <label class="field">Mood
+            <select id="moodSelect">
+              <option>Happy</option>
+              <option>Tired</option>
+              <option>Missing you</option>
+              <option>Need attention</option>
+              <option>Peaceful</option>
+            </select>
+          </label>
+          <label class="field">Tiny note <input id="moodNote" type="text" maxlength="100" placeholder="One line only"></label>
+          <button class="btn primary" type="submit">Save Check-in</button>
+        </form>
+        <div id="checkinList" class="checkin-list"></div>
+      </section>
+
+      <section class="game-panel">
+        <h2 class="section-title">Shared note</h2>
+        <textarea id="sharedNoteText" class="shared-note" maxlength="800" placeholder="Plans, lists, silly thoughts..."></textarea>
+        <div class="button-row" style="margin-top: 10px;">
+          <button id="saveNoteBtn" class="btn primary" type="button">Save Note</button>
+          <span id="noteMeta" class="small-note"></span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

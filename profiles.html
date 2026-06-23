@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profiles | MiniGames Hub</title>
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="module" src="js/profiles.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
+    </header>
+    <main class="utility-shell">
+      <section class="panel">
+        <p class="eyebrow">Shared setup</p>
+        <h1>Profiles</h1>
+        <p class="panel-copy">Each device can save its own profile. Reminders, check-ins, and shared notes use the selected profile name.</p>
+        <form id="profileForm" class="form-stack">
+          <label class="field">Name <input id="profileName" type="text" maxlength="32" placeholder="Utsav"></label>
+          <label class="field">Emoji <input id="profileEmoji" type="text" maxlength="4" placeholder="♡"></label>
+          <label class="field">Profile theme
+            <select id="profileTheme">
+              <option value="mint">Mint</option>
+              <option value="rose">Rose</option>
+              <option value="ocean">Ocean</option>
+              <option value="sunset">Sunset</option>
+            </select>
+          </label>
+          <button class="btn primary" type="submit">Save My Profile</button>
+        </form>
+        <div id="profileStatus" class="status-box" role="status">Save or choose a profile.</div>
+      </section>
+      <section class="game-panel">
+        <h2 class="section-title">Profiles on this app</h2>
+        <div id="profileList" class="profile-list"></div>
+      </section>
+    </main>
+  </body>
+</html>

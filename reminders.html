@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reminders | MiniGames Hub</title>
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="module" src="js/reminders.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
+    </header>
+    <main class="utility-shell">
+      <section class="panel">
+        <p class="eyebrow">Shared list</p>
+        <h1>Reminders</h1>
+        <p class="panel-copy">Add reminders with tags. Each item shows who added it.</p>
+        <form id="reminderForm" class="form-stack">
+          <label class="field">Reminder <input id="reminderText" type="text" maxlength="140" placeholder="Book movie tickets" required></label>
+          <label class="field">Due date <input id="reminderDue" type="date"></label>
+          <label class="field">Tag <input id="reminderTag" type="text" maxlength="24" placeholder="Date night"></label>
+          <button class="btn primary" type="submit">Add Reminder</button>
+        </form>
+        <div id="reminderStatus" class="status-box" role="status">Add something for both of you.</div>
+      </section>
+      <section class="game-panel">
+        <h2 class="section-title">Shared reminders</h2>
+        <p id="emptyReminders" class="small-note">No reminders yet.</p>
+        <div id="reminderList" class="reminder-list"></div>
+      </section>
+    </main>
+  </body>
+</html>
