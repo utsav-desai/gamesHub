@@ -2,7 +2,7 @@
 
 A free, static, lightweight 2-player game hub for your own domain. It uses plain HTML, CSS, vanilla JavaScript, Firebase Realtime Database for live multiplayer state, and Cloudflare Pages for hosting.
 
-Tic Tac Toe, Connect 4, Bingo 1v1, Quiz Duel, and Battleship are playable in live 1v1 rooms.
+Tic Tac Toe, Connect 4, Bingo 1v1, Quiz Duel, Battleship, and Name Place Animal Thing are playable in live 1v1 rooms.
 
 ## Folder Structure
 
@@ -14,7 +14,8 @@ Tic Tac Toe, Connect 4, Bingo 1v1, Quiz Duel, and Battleship are playable in liv
 │   ├── connect4.html
 │   ├── bingo.html
 │   ├── quiz.html
-│   └── battleship.html
+│   ├── battleship.html
+│   └── name-place-animal-thing.html
 ├── css/
 │   └── styles.css
 ├── js/
@@ -88,7 +89,7 @@ These rules still do not replace real authentication, but they limit the databas
         ".write": "$roomCode.matches(/^[A-Z0-9]{4,6}$/)",
         ".validate": "newData.hasChildren(['gameType', 'status', 'players'])",
         "gameType": {
-          ".validate": "newData.val() === 'tic-tac-toe' || newData.val() === 'connect4' || newData.val() === 'bingo' || newData.val() === 'quiz' || newData.val() === 'battleship'"
+          ".validate": "newData.val() === 'tic-tac-toe' || newData.val() === 'connect4' || newData.val() === 'bingo' || newData.val() === 'quiz' || newData.val() === 'battleship' || newData.val() === 'name-place-animal-thing'"
         },
         "status": {
           ".validate": "newData.val() === 'waiting' || newData.val() === 'playing' || newData.val() === 'finished'"

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A lightweight 2-player mini-games hub for live browser matches.">
     <title>MiniGames Hub</title>
+    <script src="js/theme.js"></script>
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="stylesheet" href="css/styles.css">
   </head>
@@ -14,6 +15,7 @@
         <span class="brand-mark" aria-hidden="true">2P</span>
         <span>MiniGames Hub</span>
       </a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
     </header>
 
     <main class="hub-shell">
@@ -21,7 +23,7 @@
         <div>
           <p class="eyebrow">Free static multiplayer</p>
           <h1 id="page-title">Pick a quick 2-player game.</h1>
-          <p class="hero-copy">Create a room, share the code, and play live from any browser. Five quick 2-player games now use the same Firebase room system.</p>
+          <p class="hero-copy">Create a room, share the code, and play live from any browser. Six quick 2-player games now use the same Firebase room system.</p>
         </div>
         <div class="hero-board" aria-hidden="true">
           <span>X</span><span></span><span>O</span>
@@ -74,6 +76,15 @@
           <span class="game-info">
             <strong>Battleship</strong>
             <small>Turn-based targeting</small>
+          </span>
+          <span class="pill">Play</span>
+        </a>
+
+        <a class="game-card is-ready" href="games/name-place-animal-thing.html">
+          <span class="game-icon word-icon" aria-hidden="true">NP</span>
+          <span class="game-info">
+            <strong>Name Place Animal Thing</strong>
+            <small>Fast word rounds</small>
           </span>
           <span class="pill">Play</span>
         </a>

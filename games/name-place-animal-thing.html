@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bingo 1v1 | MiniGames Hub</title>
+    <title>Name Place Animal Thing | MiniGames Hub</title>
     <script src="../js/theme.js"></script>
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="stylesheet" href="../css/styles.css">
-    <script type="module" src="../js/bingo.js"></script>
+    <script type="module" src="../js/name-place-animal-thing.js"></script>
   </head>
   <body>
     <header class="site-header">
@@ -17,8 +17,8 @@
     <main class="game-shell">
       <section class="panel" aria-labelledby="game-title">
         <p class="eyebrow">Live room</p>
-        <h1 id="game-title">Bingo 1v1</h1>
-        <p class="panel-copy">Take turns calling numbers. First to complete five lines wins.</p>
+        <h1 id="game-title">Name Place Animal Thing</h1>
+        <p class="panel-copy">Write one word in every category for the round letter. Valid answers score 10 points.</p>
         <div class="form-stack">
           <label class="field">Your name <input id="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Player"></label>
           <button id="createRoomBtn" class="btn primary" type="button">Create Room</button>
@@ -30,29 +30,31 @@
           <div class="room-actions"><button id="copyRoomBtn" class="btn" type="button">Copy</button><button id="shareBtn" class="btn" type="button">Share</button></div>
         </div>
         <div id="statusMessage" class="status-box" role="status" aria-live="polite"></div>
-        <p id="lineScore" class="small-note">Lines: 0 of 5</p>
+        <p id="wordScore" class="small-note">Score: you 0 / opponent 0</p>
         <div class="button-row" style="margin-top: 14px;"><button id="leaveRoomBtn" class="btn warning" type="button">Leave Room</button></div>
       </section>
-      <section class="game-panel" aria-label="Bingo boards">
+      <section class="game-panel" aria-label="Name Place Animal Thing">
         <div class="match-topbar">
-          <div id="playerOneBadge" class="player-badge"><strong>Player 1</strong><span>Caller</span></div>
-          <div id="playerTwoBadge" class="player-badge"><strong>Player 2</strong><span>Caller</span></div>
+          <div id="playerOneBadge" class="player-badge"><strong>Player 1</strong><span>Words</span></div>
+          <div id="playerTwoBadge" class="player-badge"><strong>Player 2</strong><span>Words</span></div>
         </div>
-        <div class="bingo-play">
+        <div class="word-round">
           <div>
-            <h2 class="section-title">Your card</h2>
-            <div id="myBingoBoard" class="bingo-board"></div>
+            <p id="roundNumber" class="eyebrow">Round 0 of 5</p>
+            <div id="roundLetter" class="round-letter">-</div>
           </div>
-          <div class="bingo-word" aria-label="Bingo progress">
-            <span>B</span>
-            <span>I</span>
-            <span>N</span>
-            <span>G</span>
-            <span>O</span>
-          </div>
+          <form id="wordForm" class="word-form">
+            <label class="field">Name <input id="nameInput" type="text" maxlength="32" placeholder="Sameer" disabled></label>
+            <label class="field">Place <input id="placeInput" type="text" maxlength="32" placeholder="Surat" disabled></label>
+            <label class="field">Animal <input id="animalInput" type="text" maxlength="32" placeholder="Snake" disabled></label>
+            <label class="field">Thing <input id="thingInput" type="text" maxlength="32" placeholder="Spoon" disabled></label>
+            <button id="submitWordsBtn" class="btn primary" type="submit" disabled>Submit Answers</button>
+          </form>
         </div>
-        <h2 class="section-title">Call a number</h2>
-        <div id="callGrid" class="call-grid"></div>
+        <div id="answerReveal" class="answer-reveal"><p class="small-note">Answers appear here after both players submit.</p></div>
+        <div class="button-row" style="margin-top: 14px;">
+          <button id="nextRoundBtn" class="btn primary next-round-btn" type="button" disabled>Next Round</button>
+        </div>
         <div id="postGameActions" class="post-game"><button id="rematchBtn" class="btn primary" type="button">Rematch</button></div>
       </section>
     </main>
