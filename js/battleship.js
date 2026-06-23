@@ -22,6 +22,7 @@ const placementControls = document.querySelector(".placement-controls");
 let selectedShipId = SHIPS[0].id;
 let selectedDirection = "horizontal";
 let isStartingBattle = false;
+let dragState = null;
 
 for (const ship of SHIPS) {
   const option = document.createElement("option");
@@ -84,12 +85,12 @@ const controller = createRoomController({
 
 shipPicker.addEventListener("change", () => {
   selectedShipId = shipPicker.value;
+  selectedDirection = getSelectedShipDirection();
   render();
 });
 
 rotateShipBtn.addEventListener("click", () => {
-  selectedDirection = selectedDirection === "horizontal" ? "vertical" : "horizontal";
-  render();
+  rotateSelectedShip();
 });
 
 randomFleetBtn.addEventListener("click", () => {
@@ -97,6 +98,10 @@ randomFleetBtn.addEventListener("click", () => {
 });
 
 readyFleetBtn.addEventListener("click", readyFleet);
+ownGrid.addEventListener("pointerdown", startShipDrag);
+window.addEventListener("pointermove", moveShipDrag);
+window.addEventListener("pointerup", endShipDrag);
+window.addEventListener("pointercancel", cancelShipDrag);
 
 function render() {
   const room = controller.room;
@@ -120,7 +125,8 @@ function render() {
   renderOcean(ownGrid, myFleet, enemyShots, {
     isTarget: false,
     isPlacement,
-    isReady: myReady
+    isReady: myReady,
+    preview: getDragPreview()
   });
   renderOcean(targetGrid, enemyFleet, myShots, {
     isTarget: true,
@@ -155,43 +161,125 @@ function renderOcean(target, fleet, shots, options) {
     const button = document.createElement("button");
     button.className = "ocean-cell";
     button.type = "button";
+    button.dataset.index = String(index);
     const ship = occupied.get(index);
     const wasShot = shots.includes(index);
     if (!isTarget && ship) {
       button.classList.add("ship", `ship-${ship.id}`, `ship-${ship.direction}`);
+      button.dataset.shipId = ship.id;
       button.append(createShipPiece(ship));
     }
-    if (!isTarget && isPlacement && !isReady && canPlaceShip(fleet, selectedShipId, index, selectedDirection)) {
+    if (!isTarget && isPlacement && !isReady && !dragState && canPlaceShip(fleet, selectedShipId, index, selectedDirection)) {
       button.classList.add("placement-open");
     }
     if (!isTarget && isPlacement && !isReady && fleet[selectedShipId]?.positions?.includes(index)) {
       button.classList.add("selected-ship");
+    }
+    if (!isTarget && dragState?.shipId === ship?.id) {
+      button.classList.add("dragging-ship");
+    }
+    if (!isTarget && options.preview?.positions?.includes(index)) {
+      button.classList.add(options.preview.valid ? "drag-preview-valid" : "drag-preview-invalid");
     }
     if (wasShot) {
       button.classList.add(ship ? "hit" : "miss");
     }
     button.disabled = getCellDisabledState({ isTarget, isPlacement, isReady, wasShot });
     if (isTarget) button.addEventListener("click", () => fireAt(index));
-    if (!isTarget && isPlacement && !isReady) button.addEventListener("click", () => moveShip(index));
     target.append(button);
   }
 }
 
-async function moveShip(index) {
+function startShipDrag(event) {
+  const room = controller.room;
+  if (!room || room.phase === "battle" || room.fleetReady?.[controller.playerKey]) return;
+
+  const cell = event.target.closest(".ocean-cell.ship");
+  if (!cell || !ownGrid.contains(cell)) return;
+
+  const index = Number(cell.dataset.index);
+  const fleet = normalizeFleet(room.fleets?.[controller.playerKey]);
+  const occupied = getOccupiedMap(fleet);
+  const ship = occupied.get(index);
+  if (!ship) return;
+
+  event.preventDefault();
+  selectedShipId = ship.id;
+  selectedDirection = fleet[ship.id].direction;
+  shipPicker.value = ship.id;
+
+  const originPositions = fleet[ship.id].positions || [];
+  dragState = {
+    pointerId: event.pointerId,
+    shipId: ship.id,
+    direction: fleet[ship.id].direction,
+    offset: Math.max(0, originPositions.indexOf(index)),
+    startX: event.clientX,
+    startY: event.clientY,
+    currentX: event.clientX,
+    currentY: event.clientY,
+    previewStart: originPositions[0],
+    hasMoved: false,
+    valid: true,
+    ghost: createDragGhost(fleet[ship.id])
+  };
+
+  ownGrid.setPointerCapture?.(event.pointerId);
+  document.body.classList.add("is-dragging-ship");
+  positionDragGhost(event.clientX, event.clientY);
+  updateDragPreview(event.clientX, event.clientY);
+  render();
+}
+
+function moveShipDrag(event) {
+  if (!dragState || event.pointerId !== dragState.pointerId) return;
+  event.preventDefault();
+
+  const distance = Math.hypot(event.clientX - dragState.startX, event.clientY - dragState.startY);
+  dragState.hasMoved = dragState.hasMoved || distance > 4;
+  dragState.currentX = event.clientX;
+  dragState.currentY = event.clientY;
+  positionDragGhost(event.clientX, event.clientY);
+  updateDragPreview(event.clientX, event.clientY);
+  render();
+}
+
+async function endShipDrag(event) {
+  if (!dragState || event.pointerId !== dragState.pointerId) return;
+  event.preventDefault();
+
+  const completedDrag = dragState.hasMoved && dragState.valid;
+  const shipId = dragState.shipId;
+  const direction = dragState.direction;
+  const previewStart = dragState.previewStart;
+  clearDragState();
+
+  if (!completedDrag) {
+    render();
+    return;
+  }
+
   const room = controller.room;
   if (!room || room.phase === "battle" || room.fleetReady?.[controller.playerKey]) return;
 
   const fleet = normalizeFleet(room.fleets?.[controller.playerKey]);
-  if (!canPlaceShip(fleet, selectedShipId, index, selectedDirection)) return;
+  if (!canPlaceShip(fleet, shipId, previewStart, direction)) return;
 
   await setMyFleet({
     ...fleet,
-    [selectedShipId]: {
-      ...fleet[selectedShipId],
-      direction: selectedDirection,
-      positions: getShipPositions(index, SHIPS.find((ship) => ship.id === selectedShipId).length, selectedDirection)
+    [shipId]: {
+      ...fleet[shipId],
+      direction,
+      positions: getShipPositions(previewStart, getShipDefinition(shipId).length, direction)
     }
   }, false);
+}
+
+function cancelShipDrag(event) {
+  if (dragState && event.pointerId === dragState.pointerId) {
+    clearDragState();
+    render();
+  }
 }
 
 async function readyFleet() {
@@ -230,6 +318,102 @@ async function setMyFleet(fleet, ready) {
     [`fleets/${controller.playerKey}`]: fleet,
     [`fleetReady/${controller.playerKey}`]: ready
   });
+}
+
+async function rotateSelectedShip() {
+  const room = controller.room;
+  if (!room || room.phase === "battle" || room.fleetReady?.[controller.playerKey]) return;
+
+  const fleet = normalizeFleet(room.fleets?.[controller.playerKey]);
+  const ship = fleet[selectedShipId];
+  if (!ship?.positions?.length) return;
+
+  const nextDirection = ship.direction === "horizontal" ? "vertical" : "horizontal";
+
+  if (!canPlaceShip(fleet, selectedShipId, ship.positions[0], nextDirection)) {
+    render();
+    return;
+  }
+
+  selectedDirection = nextDirection;
+  await setMyFleet({
+    ...fleet,
+    [selectedShipId]: {
+      ...ship,
+      direction: nextDirection,
+      positions: getShipPositions(ship.positions[0], getShipDefinition(selectedShipId).length, nextDirection)
+    }
+  }, false);
+}
+
+function updateDragPreview(clientX, clientY) {
+  if (!dragState) return;
+
+  const cell = getCellFromPoint(clientX, clientY);
+  if (!cell) {
+    dragState.previewStart = -1;
+    dragState.valid = false;
+    return;
+  }
+
+  const dropIndex = Number(cell.dataset.index);
+  const step = dragState.direction === "horizontal" ? 1 : SIZE;
+  const previewStart = dropIndex - dragState.offset * step;
+  const fleet = normalizeFleet(controller.room?.fleets?.[controller.playerKey]);
+  dragState.previewStart = previewStart;
+  dragState.valid = canPlaceShip(fleet, dragState.shipId, previewStart, dragState.direction);
+}
+
+function getDragPreview() {
+  if (!dragState) return null;
+
+  const length = getShipDefinition(dragState.shipId).length;
+  const positions = getShipPositions(dragState.previewStart, length, dragState.direction)
+    .filter((position) => position >= 0 && position < SIZE * SIZE);
+  if (!positions.length) return null;
+
+  return {
+    valid: dragState.valid,
+    positions
+  };
+}
+
+function getCellFromPoint(clientX, clientY) {
+  const element = document.elementFromPoint(clientX, clientY);
+  const cell = element?.closest?.(".ocean-cell");
+  return cell && ownGrid.contains(cell) ? cell : null;
+}
+
+function createDragGhost(ship) {
+  const ghost = document.createElement("div");
+  ghost.className = `ship-drag-ghost ship-${ship.id} ship-${ship.direction}`;
+  for (const [segment] of ship.positions.entries()) {
+    const piece = createShipPiece({
+      ...getShipDefinition(ship.id),
+      direction: ship.direction,
+      segmentType: getSegmentType(segment, ship.positions.length)
+    });
+    ghost.append(piece);
+  }
+  document.body.append(ghost);
+  return ghost;
+}
+
+function positionDragGhost(clientX, clientY) {
+  if (!dragState?.ghost) return;
+  dragState.ghost.style.transform = `translate(${clientX}px, ${clientY}px) translate(-50%, -50%)`;
+}
+
+function clearDragState() {
+  dragState?.ghost?.remove();
+  dragState = null;
+  document.body.classList.remove("is-dragging-ship");
+}
+
+function getSelectedShipDirection() {
+  const room = controller.room;
+  const fleet = normalizeFleet(room?.fleets?.[controller.playerKey]);
+  return fleet[selectedShipId]?.direction || selectedDirection;
 }
 
 async function fireAt(index) {
@@ -291,7 +475,7 @@ function placeShips() {
 }
 
 function canPlaceShip(fleet, shipId, start, direction) {
-  const ship = SHIPS.find((item) => item.id === shipId);
+  const ship = getShipDefinition(shipId);
   if (!ship) return false;
 
   const positions = getShipPositions(start, ship.length, direction);
@@ -320,7 +504,7 @@ function getOccupiedMap(fleet, excludedShipId = "") {
   const occupied = new Map();
   for (const ship of Object.values(normalizeFleet(fleet))) {
     if (ship.id === excludedShipId) continue;
-    const definition = SHIPS.find((item) => item.id === ship.id) || ship;
+    const definition = getShipDefinition(ship.id) || ship;
     for (const [segment, position] of (ship.positions || []).entries()) {
       occupied.set(position, {
         ...definition,
@@ -330,6 +514,10 @@ function getOccupiedMap(fleet, excludedShipId = "") {
     }
   }
   return occupied;
+}
+
+function getShipDefinition(shipId) {
+  return SHIPS.find((ship) => ship.id === shipId);
 }
 
 function createShipPiece(ship) {
