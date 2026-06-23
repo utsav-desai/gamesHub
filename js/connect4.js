@@ -3,15 +3,28 @@ import { createRoomController } from "./game-room.js";
 const ROWS = 6;
 const COLS = 7;
 const boardEl = document.querySelector("#connectBoard");
+const dropControls = document.querySelector("#dropControls");
 const cells = [];
+const dropButtons = [];
+
+for (let col = 0; col < COLS; col += 1) {
+  const button = document.createElement("button");
+  button.className = "drop-btn";
+  button.type = "button";
+  button.textContent = "Drop";
+  button.dataset.col = String(col);
+  button.setAttribute("aria-label", `Drop in column ${col + 1}`);
+  button.addEventListener("click", () => playColumn(col));
+  dropControls.append(button);
+  dropButtons.push(button);
+}
 
 for (let row = 0; row < ROWS; row += 1) {
   for (let col = 0; col < COLS; col += 1) {
-    const cell = document.createElement("button");
+    const cell = document.createElement("span");
     cell.className = "c4-cell";
-    cell.type = "button";
     cell.dataset.col = String(col);
-    cell.setAttribute("aria-label", `Column ${col + 1}`);
+    cell.setAttribute("aria-label", `Row ${row + 1}, column ${col + 1}`);
     boardEl.append(cell);
     cells.push(cell);
   }
@@ -34,10 +47,6 @@ const controller = createRoomController({
   getPlayerLabels: () => ({ player1: "Red", player2: "Yellow" }),
   onRoomChange: render,
   onReset: () => render({ room: null })
-});
-
-cells.forEach((cell) => {
-  cell.addEventListener("click", () => playColumn(Number(cell.dataset.col)));
 });
 
 async function playColumn(col) {
@@ -68,7 +77,9 @@ function render() {
     cell.className = "c4-cell";
     if (mark) cell.classList.add(mark === "R" ? "red" : "yellow");
     if (room?.winningLine?.includes(index)) cell.classList.add("win");
-    cell.disabled = !room || !controller.isMyTurn || findOpenRow(board, Number(cell.dataset.col)) === -1;
+  });
+  dropButtons.forEach((button) => {
+    button.disabled = !room || !controller.isMyTurn || findOpenRow(board, Number(button.dataset.col)) === -1;
   });
 }
 

@@ -28,7 +28,7 @@
           <div class="room-actions"><button id="copyRoomBtn" class="btn" type="button">Copy</button><button id="shareBtn" class="btn" type="button">Share</button></div>
         </div>
         <div id="statusMessage" class="status-box" role="status" aria-live="polite"></div>
-        <p id="lineScore" class="small-note">Lines: you 0 / opponent 0</p>
+        <p id="lineScore" class="small-note">Lines: 0 of 5</p>
         <div class="button-row" style="margin-top: 14px;"><button id="leaveRoomBtn" class="btn warning" type="button">Leave Room</button></div>
       </section>
       <section class="game-panel" aria-label="Bingo boards">
@@ -36,9 +36,18 @@
           <div id="playerOneBadge" class="player-badge"><strong>Player 1</strong><span>Caller</span></div>
           <div id="playerTwoBadge" class="player-badge"><strong>Player 2</strong><span>Caller</span></div>
         </div>
-        <div class="bingo-layout">
-          <div><h2 class="section-title">Your card</h2><div id="myBingoBoard" class="bingo-board"></div></div>
-          <div><h2 class="section-title">Opponent marks</h2><div id="opponentBingoBoard" class="bingo-board compact"></div></div>
+        <div class="bingo-play">
+          <div>
+            <h2 class="section-title">Your card</h2>
+            <div id="myBingoBoard" class="bingo-board"></div>
+          </div>
+          <div class="bingo-word" aria-label="Bingo progress">
+            <span>B</span>
+            <span>I</span>
+            <span>N</span>
+            <span>G</span>
+            <span>O</span>
+          </div>
         </div>
         <h2 class="section-title">Call a number</h2>
         <div id="callGrid" class="call-grid"></div>

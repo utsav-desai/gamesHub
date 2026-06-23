@@ -16,7 +16,7 @@
       <section class="panel" aria-labelledby="game-title">
         <p class="eyebrow">Live room</p>
         <h1 id="game-title">Connect 4</h1>
-        <p class="panel-copy">Drop discs into columns. Four in a row wins.</p>
+        <p class="panel-copy">Choose a column at the top. The disc drops to the lowest open spot.</p>
         <div class="form-stack">
           <label class="field">Your name <input id="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Player"></label>
           <button id="createRoomBtn" class="btn primary" type="button">Create Room</button>
@@ -35,7 +35,12 @@
           <div id="playerOneBadge" class="player-badge"><strong>Player 1</strong><span>Red</span></div>
           <div id="playerTwoBadge" class="player-badge"><strong>Player 2</strong><span>Yellow</span></div>
         </div>
-        <div class="board-wrap"><div id="connectBoard" class="connect-board" aria-label="Connect 4 grid"></div></div>
+        <div class="board-wrap">
+          <div class="connect-stack">
+            <div id="dropControls" class="drop-controls" aria-label="Drop controls"></div>
+            <div id="connectBoard" class="connect-board" aria-label="Connect 4 grid"></div>
+          </div>
+        </div>
         <div id="postGameActions" class="post-game"><button id="rematchBtn" class="btn primary" type="button">Rematch</button></div>
       </section>
     </main>
