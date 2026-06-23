@@ -876,6 +876,46 @@ h1 {
   grid-template-columns: repeat(5, 1fr);
   gap: 7px;
   margin-bottom: 18px;
+  --timer-progress: 100%;
+}
+
+.bingo-board.timer-active::before,
+.bingo-board.timer-active::after {
+  position: absolute;
+  inset: -7px;
+  border-radius: calc(var(--radius) + 8px);
+  content: "";
+  pointer-events: none;
+}
+
+.bingo-board.timer-active::before {
+  z-index: 0;
+  padding: 5px;
+  background:
+    conic-gradient(from -90deg, #fff07a 0 var(--timer-progress), #ff8a1f calc(var(--timer-progress) + 2%), transparent calc(var(--timer-progress) + 3%) 100%);
+  filter: drop-shadow(0 0 8px rgba(255, 138, 31, 0.72));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.bingo-board.timer-active::after {
+  z-index: 0;
+  border: 1px solid rgba(255, 138, 31, 0.35);
+  box-shadow: 0 0 18px rgba(255, 138, 31, 0.34);
+  animation: bingo-burn-flicker 650ms steps(2, end) infinite;
+}
+
+.bingo-board.timer-warning::before {
+  background:
+    conic-gradient(from -90deg, #ffe36a 0 var(--timer-progress), #ff3b30 calc(var(--timer-progress) + 2%), transparent calc(var(--timer-progress) + 3%) 100%);
+  filter: drop-shadow(0 0 10px rgba(255, 59, 48, 0.82));
+}
+
+.bingo-board.timer-warning::after {
+  border-color: rgba(255, 59, 48, 0.42);
+  box-shadow: 0 0 22px rgba(255, 59, 48, 0.42);
 }
 
 .call-grid {
@@ -901,6 +941,11 @@ h1 {
   background: white;
   color: var(--ink);
   font-weight: 850;
+}
+
+.bingo-cell {
+  position: relative;
+  z-index: 1;
 }
 
 .bingo-cell.marked,
@@ -990,6 +1035,18 @@ h1 {
   border-color: var(--accent);
   background: #eef9f7;
   outline: none;
+}
+
+@keyframes bingo-burn-flicker {
+  0% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.008);
+  }
 }
 
 .quiz-question {
