@@ -1088,6 +1088,16 @@ h1 {
   gap: 6px;
 }
 
+.placement-controls {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.placement-controls.is-hidden {
+  display: none;
+}
+
 .ocean-cell {
   display: grid;
   aspect-ratio: 1;
@@ -1101,8 +1111,40 @@ h1 {
 }
 
 .ocean-cell.ship {
-  background: #9aa6a8;
-  border-color: var(--ink);
+  background: #52656b;
+  border-color: #26383e;
+  color: white;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.22);
+}
+
+.ocean-cell.ship-carrier {
+  background: #52656b;
+}
+
+.ocean-cell.ship-cruiser {
+  background: #6b5e7c;
+}
+
+.ocean-cell.ship-destroyer {
+  background: #7b7453;
+}
+
+.ocean-cell.ship-submarine {
+  background: #4d7372;
+}
+
+.ocean-cell.ship-patrol {
+  background: #7d5f58;
+}
+
+.ocean-cell.placement-open:not(.ship) {
+  border-color: var(--accent);
+  background: #d7f5ef;
+}
+
+.ocean-cell.selected-ship {
+  outline: 3px solid var(--sun);
+  outline-offset: -4px;
 }
 
 .ocean-cell.hit {
@@ -1118,6 +1160,35 @@ h1 {
 :root[data-theme="dark"] .ocean-cell {
   background: #16313a;
   border-color: #33535c;
+}
+
+:root[data-theme="dark"] .ocean-cell.ship {
+  border-color: #9bb3b8;
+  color: white;
+}
+
+:root[data-theme="dark"] .ocean-cell.ship-carrier {
+  background: #52656b;
+}
+
+:root[data-theme="dark"] .ocean-cell.ship-cruiser {
+  background: #6b5e7c;
+}
+
+:root[data-theme="dark"] .ocean-cell.ship-destroyer {
+  background: #7b7453;
+}
+
+:root[data-theme="dark"] .ocean-cell.ship-submarine {
+  background: #4d7372;
+}
+
+:root[data-theme="dark"] .ocean-cell.ship-patrol {
+  background: #7d5f58;
+}
+
+:root[data-theme="dark"] .ocean-cell.placement-open:not(.ship) {
+  background: #1f4945;
 }
 
 :root[data-theme="dark"] .ocean-cell.miss {

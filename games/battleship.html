@@ -18,7 +18,7 @@
       <section class="panel" aria-labelledby="game-title">
         <p class="eyebrow">Live room</p>
         <h1 id="game-title">Battleship</h1>
-        <p class="panel-copy">Ships are placed automatically. Take turns firing at the opponent ocean.</p>
+        <p class="panel-copy">Place your ships, lock your fleet, then take turns firing at the opponent ocean.</p>
         <div class="form-stack">
           <label class="field">Your name <input id="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Player"></label>
           <button id="createRoomBtn" class="btn primary" type="button">Create Room</button>
@@ -30,7 +30,15 @@
           <div class="room-actions"><button id="copyRoomBtn" class="btn" type="button">Copy</button><button id="shareBtn" class="btn" type="button">Share</button></div>
         </div>
         <div id="statusMessage" class="status-box" role="status" aria-live="polite"></div>
-        <p id="shipStatus" class="small-note">Hits: you 0/12 / opponent 0/12</p>
+        <p id="shipStatus" class="small-note">Place your fleet to begin.</p>
+        <div class="placement-controls" aria-label="Ship placement controls">
+          <label class="field">Ship <select id="shipPicker"></select></label>
+          <div class="button-row">
+            <button id="rotateShipBtn" class="btn" type="button">Rotate</button>
+            <button id="randomFleetBtn" class="btn" type="button">Random</button>
+            <button id="readyFleetBtn" class="btn primary" type="button">Ready</button>
+          </div>
+        </div>
         <div class="button-row" style="margin-top: 14px;"><button id="leaveRoomBtn" class="btn warning" type="button">Leave Room</button></div>
       </section>
       <section class="game-panel" aria-label="Battleship boards">
