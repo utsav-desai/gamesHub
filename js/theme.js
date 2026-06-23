@@ -48,8 +48,17 @@ function injectNavigation() {
     <a href="${prefix}reminders.html">Reminders</a>
     <a href="${prefix}together.html">Together</a>
     <a href="${prefix}drawing.html">Drawing</a>
-    <a href="${prefix}gallery.html">Gallery</a>
   `;
+  [...nav.querySelectorAll("a")].forEach((link) => {
+    const linkPath = new URL(link.getAttribute("href"), location.href).pathname;
+    if (
+      linkPath === location.pathname ||
+      (location.pathname === "/" && link.textContent === "Games") ||
+      (location.pathname.includes("/games/") && link.textContent === "Games")
+    ) {
+      link.classList.add("active");
+    }
+  });
   const toggle = header.querySelector("[data-theme-toggle]");
   header.insertBefore(nav, toggle || null);
 }

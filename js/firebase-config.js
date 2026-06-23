@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA9nQ41dC_suR3lTdTXJJI9uN7LSui0kKQ",
@@ -15,4 +14,3 @@ const firebaseConfig = {
 export const isFirebaseConfigured = Object.values(firebaseConfig).every((value) => value && value !== "PASTE_HERE");
 export const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;
 export const db = isFirebaseConfigured ? getDatabase(app) : null;
-export const storage = isFirebaseConfigured ? getStorage(app) : null;

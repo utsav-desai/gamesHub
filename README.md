@@ -30,8 +30,7 @@ Tic Tac Toe, Connect 4, Bingo 1v1, Quiz Duel, Battleship, and Name Place Animal 
 
 Each game room is stored under `/rooms/{roomCode}` in Firebase Realtime Database. The creator becomes `player1`; the joining player becomes `player2`. The shared room object stores the game type, players, game state, turn, winner, and rematch votes.
 
-Shared couple features live under `/couple`: profiles, reminders, date ideas, mood check-ins, and a shared note.
-Gallery files are stored in Firebase Storage under `couple-gallery/`, while gallery metadata stays under `/couple/gallery` in Realtime Database.
+Shared couple features live under `/couple`: profiles, reminders, date ideas, mood check-ins, a shared note, and drawing strokes.
 
 The browser stores a unique `playerId` in `localStorage`, so refreshing the page can reconnect the same player to the same room. The room helper in `js/room.js` handles room codes, create/join logic, two-player limits, live subscriptions, and basic presence. `js/game-room.js` handles the common room UI for the newer games, while each game file handles its own rules.
 
@@ -43,11 +42,10 @@ The browser stores a unique `playerId` in `localStorage`, so refreshing the page
 4. Click **Create Database**.
 5. Pick a region close to your players.
 6. Start in test mode while developing.
-7. Open **Build > Storage** and enable Firebase Storage.
-8. Open **Project settings > General**.
-9. Under **Your apps**, create a web app.
-10. Copy the Firebase config object.
-11. Paste the values into `js/firebase-config.js`.
+7. Open **Project settings > General**.
+8. Under **Your apps**, create a web app.
+9. Copy the Firebase config object.
+10. Paste the values into `js/firebase-config.js`.
 
 The file already contains placeholders:
 
@@ -118,21 +116,6 @@ These rules still do not replace real authentication, but they limit the databas
 ```
 
 For stronger production rules, add Firebase Authentication, even anonymous auth, and validate that each write belongs to the matching player id.
-
-## Development Firebase Storage Rules
-
-These are open development rules for the gallery. Do not use them for a serious public site.
-
-```txt
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /couple-gallery/{allPaths=**} {
-      allow read, write: if true;
-    }
-  }
-}
-```
 
 ## Run Locally
 
