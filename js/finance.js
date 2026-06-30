@@ -85,8 +85,8 @@ function renderDashboard() {
     panel("Expense Categories", barList(categoryBreakdown())),
     panel("Upcoming Events", eventList(upcomingEvents())),
     panel("Recent Transactions", eventList(recentTransactions())),
-    panel("Monthly Spending", barList(monthlySeries().map((row) => ({ label: row.label, value: row.expenses })))),
-    panel("Savings Trend", barList(monthlySeries().map((row) => ({ label: row.label, value: row.income - row.expenses }))))
+    panel("Monthly Spending", lineChart(monthlySeries().map((row) => ({ label: row.label, value: row.expenses })), { compact: true })),
+    panel("Savings Trend", lineChart(monthlySeries().map((row) => ({ label: row.label, value: row.income - row.expenses })), { compact: true }))
   );
   app.append(grid);
 }
@@ -500,7 +500,56 @@ function panel(title, body) {
 
 function projectionChart(rows, key) {
   const sample = rows.filter((_, index) => index % 30 === 0 || index === rows.length - 1);
-  return barList(sample.map((row) => ({ label: row.label, value: row[key] })));
+  return lineChart(sample.map((row) => ({ label: row.label, value: row[key] })));
+}
+
+function lineChart(items, options = {}) {
+  const chart = el("div", `finance-line-chart ${options.compact ? "compact" : ""}`.trim());
+  if (!items.length) {
+    chart.innerHTML = `<p class="small-note">No data yet.</p>`;
+    return chart;
+  }
+
+  const width = 720;
+  const height = options.compact ? 220 : 280;
+  const padX = 46;
+  const padTop = 18;
+  const padBottom = 46;
+  const values = items.map((item) => Number(item.value || 0));
+  const rawMin = Math.min(...values, 0);
+  const rawMax = Math.max(...values, 0);
+  const spread = rawMax - rawMin || Math.max(Math.abs(rawMax), 1);
+  const min = rawMin - spread * 0.08;
+  const max = rawMax + spread * 0.08;
+  const plotWidth = width - padX * 2;
+  const plotHeight = height - padTop - padBottom;
+  const points = items.map((item, index) => {
+    const x = padX + (items.length === 1 ? plotWidth / 2 : (plotWidth * index) / (items.length - 1));
+    const y = padTop + plotHeight - ((Number(item.value || 0) - min) / (max - min || 1)) * plotHeight;
+    return { ...item, x, y };
+  });
+  const area = `${padX},${height - padBottom} ${points.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ")} ${width - padX},${height - padBottom}`;
+  const line = points.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
+  const labelIndexes = points.length <= 6 ? points.map((_, index) => index) : [0, Math.floor((points.length - 1) / 2), points.length - 1];
+  const zeroY = padTop + plotHeight - ((0 - min) / (max - min || 1)) * plotHeight;
+
+  chart.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Line chart">
+      <line class="chart-grid" x1="${padX}" x2="${width - padX}" y1="${padTop}" y2="${padTop}"></line>
+      <line class="chart-grid" x1="${padX}" x2="${width - padX}" y1="${height - padBottom}" y2="${height - padBottom}"></line>
+      <line class="chart-zero" x1="${padX}" x2="${width - padX}" y1="${zeroY.toFixed(1)}" y2="${zeroY.toFixed(1)}"></line>
+      <polygon class="chart-area" points="${area}"></polygon>
+      <polyline class="chart-line" points="${line}"></polyline>
+      ${points.map((point) => `<circle class="chart-dot" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="4"><title>${escapeHtml(point.label)}: ${money(point.value)}</title></circle>`).join("")}
+      ${labelIndexes.map((index) => {
+        const point = points[index];
+        return `<text class="chart-label" x="${point.x.toFixed(1)}" y="${height - 16}" text-anchor="${index === 0 ? "start" : index === points.length - 1 ? "end" : "middle"}">${escapeHtml(point.label)}</text>`;
+      }).join("")}
+      <text class="chart-value chart-max" x="${padX}" y="${padTop + 4}">${escapeHtml(money(rawMax))}</text>
+      <text class="chart-value chart-min" x="${padX}" y="${height - padBottom - 6}">${escapeHtml(money(rawMin))}</text>
+    </svg>
+  `;
+  return chart;
 }
 
 function barList(items) {

@@ -413,6 +413,61 @@ button {
   gap: 10px;
 }
 
+.finance-line-chart {
+  min-height: 280px;
+}
+
+.finance-line-chart.compact {
+  min-height: 220px;
+}
+
+.finance-line-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart-grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.chart-zero {
+  stroke: color-mix(in srgb, var(--muted) 38%, transparent);
+  stroke-dasharray: 5 7;
+  stroke-width: 1;
+}
+
+.chart-area {
+  fill: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.chart-dot {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.chart-label,
+.chart-value {
+  fill: var(--muted);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.chart-value {
+  font-size: 18px;
+}
+
 .bar-row {
   display: grid;
   grid-template-columns: minmax(72px, 120px) minmax(90px, 1fr) minmax(82px, auto);
