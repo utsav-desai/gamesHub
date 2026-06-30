@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Finance Tracker | MiniGames Hub</title>
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="module" src="js/finance.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">2P</span><span>MiniGames Hub</span></a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
+    </header>
+
+    <main class="finance-shell">
+      <section class="finance-head" aria-labelledby="financeTitle">
+        <div>
+          <p class="eyebrow">My Balance</p>
+          <h1 id="financeTitle">Finance tracker</h1>
+          <p class="hero-copy">Track income, spending, planned cash flows, stocks, goals, and net worth in one private browser wallet.</p>
+        </div>
+        <div class="finance-actions">
+          <button class="btn" type="button" id="exportFinance">Export</button>
+          <label class="btn file-btn">Import <input id="importFinance" type="file" accept="application/json"></label>
+        </div>
+      </section>
+
+      <nav class="finance-tabs" aria-label="Finance sections">
+        <button class="active" type="button" data-view="dashboard">Dashboard</button>
+        <button type="button" data-view="income">Income</button>
+        <button type="button" data-view="expenses">Expenses</button>
+        <button type="button" data-view="cashflows">Cash Flows</button>
+        <button type="button" data-view="stocks">Stocks</button>
+        <button type="button" data-view="goals">Goals</button>
+        <button type="button" data-view="networth">Net Worth</button>
+        <button type="button" data-view="settings">Settings</button>
+      </nav>
+
+      <section id="financeApp" class="finance-app" aria-live="polite"></section>
+      <div id="financeStatus" class="status-box" role="status">Ready.</div>
+    </main>
+  </body>
+</html>

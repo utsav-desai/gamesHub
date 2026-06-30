@@ -47,6 +47,7 @@ function injectNavigation() {
     <a href="${prefix}profiles.html">Profiles</a>
     <a href="${prefix}reminders.html">Reminders</a>
     <a href="${prefix}together.html">Together</a>
+    <a href="${prefix}finance.html">Finance</a>
     <a href="${prefix}drawing.html">Drawing</a>
   `;
   [...nav.querySelectorAll("a")].forEach((link) => {
